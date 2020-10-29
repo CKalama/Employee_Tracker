@@ -63,6 +63,7 @@ function mainQs(data) {
     })
 }
 
+// SELECT FROM for View Departments, 
 function viewAll(placeHolder) {
     if (placeHolder.whichCommand === "View Departments") {
     connection.query("SELECT * FROM department", function(err, result) {
@@ -85,8 +86,30 @@ function viewAll(placeHolder) {
     }
 };
 
-// SELECT FROM for View Departments, 
+
 // INSERT INTO For Adds 
+function addDepartment() {
+    inquirer.prompt ([
+        {
+            message:"What is the Name of Your New Department?",
+            type:"input",
+            name:"departmentName"
+        }, 
+        {
+        message:"Please Select an id Number for your Department",
+            type:"input",
+            name:"departmentId"
+        }
+    ]).then(function(departmentAnswer) {
+        console.log("department answerrrrrr", departmentAnswer);
+        connection.query(`INSERT INTO department(id, name) VALUES (?, ?)`, [departmentAnswer.departmentId, departmentAnswer.departmentName], function(err, result) {
+
+            if (err) throw err;
+            console.log(result);
+        })
+
+    })
+};
 
 
 mainQs();
