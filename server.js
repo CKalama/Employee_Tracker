@@ -67,17 +67,17 @@ function viewAll(placeHolder) {
     if (placeHolder.whichCommand === "View Departments") {
     connection.query("SELECT * FROM department", function(err, result) {
         if (err) throw err;
-        console.log(result);
+        console.log("Departments:", result);
         }) 
     };
     if (placeHolder.whichCommand === "View Employee") {
-        connection.query("SELECT * FROM employee", function(err, result) {
+        connection.query("SELECT first_name, last_name, role_id FROM employee", function(err, result) {
             if (err) throw err;
-            console.log(result);
+            console.log("Here Are Your Employees: ", result);
         })
     };
     if (placeHolder.whichCommand === "View Role") {
-        connection.query(`SELECT title, salary FROM role = ${placeHolder.title}`, function(err, result) {
+        connection.query(`SELECT * FROM role`, function(err, result) {
             if(err) throw err; 
             //console.log(result);
             console.log("Job Title and Salary:", result);
