@@ -111,33 +111,65 @@ function addDepartment() {
     })
 };
 
+function addEmployee() {
+    inquirer.prompt ([
+        {
+            message:"What is the First Name of Your New Employee?",
+            type:"input",
+            name:"employeeFirstName"
+        }, 
+        {
+            message:"What is the Last Name of Your Employee?",
+            type:"input",
+            name:"employeeLastName"
+        },
+        {
+        message:"Please Select an id Number for your Employee, *This will Also be their Department!!!!*",
+            type:"input",
+            name:"employeeId"
+        }
+    ]).then(function(employeeAnswer) {
+        console.log("employee answerrrrrr", employeeAnswer);
+        connection.query(`INSERT INTO employee(first_name, last_name, role_id) VALUES (?, ?, ?)`, [employeeAnswer.employeeFirstName, employeeAnswer.employeeLastName, employeeAnswer.employeeId], function(err, result) {
+
+            if (err) throw err;
+            console.log(result);
+        })
+
+    })
+};
+
+function addRole() {
+    inquirer.prompt ([
+        {
+            message:"What is the Title of this Role?",
+            type:"input",
+            name:"roleTitle"
+        }, 
+        {
+            message:"What is the Salary for this Role?",
+            type:"input",
+            name:"roleSalary"
+        },
+        {
+        message:"What is the Department Id for this Role to be assigned to?",
+            type:"input",
+            name:"roleDepartmentId"
+        }
+    ]).then(function(roleAnswer) {
+        console.log("employee answerrrrrr", roleAnswer);
+        connection.query(`INSERT INTO role(title, salary, department_id) VALUES (?, ?, ?)`, [roleAnswer.roleTitle, roleAnswer.roleSalary, roleAnswer.roleDepartmentId], function(err, result) {
+
+            if (err) throw err;
+            console.log(result);
+        })
+
+    })
+};
 
 mainQs();
 
-// function addEmployee(answer) {
-//     inquirer.prompt ([
-//         {
-//             message: "What is the employees First Name?",
-//             type:"input",
-//             name: "firstName"
-//         },
-//         {
-//         message: "What is the employees Last Name?",
-//         type:"input",
-//         name: "lastName"
-//         },
-//         {
-//         message: "What is the employees id for their role?",
-//         type:"input",
-//         name: "employeeID"
-//         },
-//         {
-//             message: "What is the employees id for their department?",
-//             type:"input",
-//             name: "employeeID"
-//             },
-//     ])
-// }
+
 
 
 // connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",[answers.title, answers.salary, answers.department_id], function(err, results){
