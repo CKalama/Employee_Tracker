@@ -87,6 +87,7 @@ function viewAll(placeHolder) {
 };
 
 
+
 // INSERT INTO For Adds 
 function addDepartment() {
     inquirer.prompt ([
@@ -112,6 +113,7 @@ function addDepartment() {
 };
 
 function addEmployee() {
+    var findRoles = findRoles();
     inquirer.prompt ([
         {
             message:"What is the First Name of Your New Employee?",
@@ -166,6 +168,58 @@ function addRole() {
 
     })
 };
+
+function findRoles() {
+    return connection.query(`SELECT title FROM role`, function(err, result) {
+        if (err) throw err
+        return result.map(record => {
+            return record.title;
+        });
+    })
+}
+
+function getEmployeeList() {
+   connection.query("SELECT first_name, last_name, role_id FROM employee", function(err, result) {
+        if (err) throw err;
+        //console.log("Here Are Your Employees: ", result);
+        // const employeeList =  result.map(record => {
+        //     return `${record.first_name} ${record.last_name}`
+        // });
+        // console.log(employeeList);
+        // return employeeList;
+        var roleArray = res.map(record => record.title)
+        return roleArray;
+    })
+}
+
+function updateEmployee(employeeList) {
+    // connection.query('UPDATE employee SET ')
+    //Need to break the whole name into chosen first and last names. 
+    //Need to split into first_name, last_name
+    //Need to update query.
+    const employeeList = getEmployeeList();
+
+    inquirer.prompt ([
+        {
+            message:"Which employee would you like to update?",
+            type:"list",
+            name:"selectedEmployee",
+            choices:employeeList
+        },
+        {
+            message:"What is their new role?",
+            type:"input",
+            name: "updatedRole"
+        },
+        {
+            message:"What department is this position in?",
+            type:"list",
+            name:"updatedDepartment"
+            //choices: //Want to create a getDepartment function
+        }
+    ]).then
+
+}
 
 mainQs();
 
