@@ -72,7 +72,7 @@ function viewAll(placeHolder) {
         }) 
     };
     if (placeHolder.whichCommand === "View Employee") {
-        connection.query("SELECT first_name, last_name, role_id FROM employee", function(err, result) {
+        connection.query(`SELECT first_name, last_name, role_id FROM employee`, function(err, result) {
             if (err) throw err;
             console.log("Here Are Your Employees: ", result);
         })
@@ -169,17 +169,17 @@ function addRole() {
     })
 };
 
-function findRoles() {
-    return connection.query(`SELECT title FROM role`, function(err, result) {
-        if (err) throw err
-        return result.map(record => {
-            return record.title;
-        });
-    })
-}
+// function findRoles() {
+//     return connection.query(`SELECT title FROM role`, function(err, result) {
+//         if (err) throw err
+//         return result.map(record => {
+//             return record.title;
+//         });
+//     })
+// }
 
 function getEmployeeList() {
-   connection.query("SELECT first_name, last_name, role_id FROM employee", function(err, result) {
+   connection.query(`SELECT first_name, last_name, role_id FROM employee`, function(err, result) {
         if (err) throw err;
         //console.log("Here Are Your Employees: ", result);
         // const employeeList =  result.map(record => {
@@ -187,7 +187,7 @@ function getEmployeeList() {
         // });
         // console.log(employeeList);
         // return employeeList;
-        var roleArray = res.map(record => record.title)
+        var roleArray = result.map(record => record.title)
         return roleArray;
     })
 }
@@ -197,14 +197,22 @@ function updateEmployee(employeeList) {
     //Need to break the whole name into chosen first and last names. 
     //Need to split into first_name, last_name
     //Need to update query.
-    const employeeList = getEmployeeList();
+    connection.query("SELECT first_name, last_name, role_id FROM employee", function(err, result) {
+        if (err) throw err;
+        var wholeName = result.join('first_name' , 'last_name');
 
     inquirer.prompt ([
         {
             message:"Which employee would you like to update?",
             type:"list",
             name:"selectedEmployee",
-            choices:employeeList
+            choices:function() {
+                var employeeList = [];
+                for (let i=0; i< result.length; i++) {
+                    employeeList.push(result[i].first_name + " " + result[i].last_name);
+                }
+                return employeeList;
+            }
         },
         {
             message:"What is their new role?",
@@ -217,8 +225,11 @@ function updateEmployee(employeeList) {
             name:"updatedDepartment"
             //choices: //Want to create a getDepartment function
         }
-    ]).then
+    ]).then(function (updateAnswer) {
+        console.log("Here are our answersssssss", updateAnswer);
+    })
 
+})
 }
 
 mainQs();
