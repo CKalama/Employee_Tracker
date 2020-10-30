@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const { allowedNodeEnvironmentFlags } = require('process');
+const { update } = require('lodash');
 // const { SlowBuffer } = require('buffer');
 
 var connection  = mysql.createConnection({
@@ -178,28 +179,34 @@ function addRole() {
 //     })
 // }
 
-function getEmployeeList() {
-   connection.query(`SELECT first_name, last_name, role_id FROM employee`, function(err, result) {
-        if (err) throw err;
-        //console.log("Here Are Your Employees: ", result);
-        // const employeeList =  result.map(record => {
-        //     return `${record.first_name} ${record.last_name}`
-        // });
-        // console.log(employeeList);
-        // return employeeList;
-        var roleArray = result.map(record => record.title)
-        return roleArray;
-    })
-}
+// function getEmployeeList() {
+//    connection.query(`SELECT first_name, last_name, role_id FROM employee`, function(err, result) {
+//         if (err) throw err;
+//         //console.log("Here Are Your Employees: ", result);
+//         // const employeeList =  result.map(record => {
+//         //     return `${record.first_name} ${record.last_name}`
+//         // });
+//         // console.log(employeeList);
+//         // return employeeList;
+//         var roleArray = result.map(record => record.title)
+//         return roleArray;
+//     })
+// }
+
+//O 
+
 
 function updateEmployee(employeeList) {
+    // I need to somehow grab the employee, match it with their role id. and then update their role from there. I can't seem to figure out how to call it wihin the second inquirer question. It might have something to do with how I wrote the first connection.query. I need to be able to grab their name, their role (which are two separate tables) and then push them into their respective tables.... 
+
+    
     // connection.query('UPDATE employee SET ')
     //Need to break the whole name into chosen first and last names. 
     //Need to split into first_name, last_name
     //Need to update query.
-    connection.query("SELECT first_name, last_name, role_id FROM employee", function(err, result) {
+    connection.query("SELECT first_name, last_name, role_id FROM employee", "SELECT title FROM employee",function(err, result) {
         if (err) throw err;
-        var wholeName = result.join('first_name' , 'last_name');
+       
 
     inquirer.prompt ([
         {
@@ -217,16 +224,31 @@ function updateEmployee(employeeList) {
         {
             message:"What is their new role?",
             type:"input",
-            name: "updatedRole"
-        },
-        {
-            message:"What department is this position in?",
-            type:"list",
-            name:"updatedDepartment"
-            //choices: //Want to create a getDepartment function
+            name: "updatedRole",
         }
+        // ,
+        // {
+        //     message:"What department is this position in?",
+        //     type:"list",
+        //     name:"updatedDepartment"
+        //     //choices: //Want to create a getDepartment function
+        // }
     ]).then(function (updateAnswer) {
         console.log("Here are our answersssssss", updateAnswer);
+        connection.query(`UPDATE employee SET ?? WHERE ??`, 
+        [
+            {
+                first_name: updateAnswer.first_name
+            },
+            {
+                last_name: updateAnswer.last_name
+            }
+        ],
+        function(err){
+            if (err) throw err;
+            console.log(updateAnswer)
+        }
+        );
     })
 
 })
