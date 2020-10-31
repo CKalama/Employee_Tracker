@@ -204,54 +204,77 @@ function updateEmployee(employeeList) {
     //Need to break the whole name into chosen first and last names. 
     //Need to split into first_name, last_name
     //Need to update query.
-    connection.query("SELECT first_name, last_name, role_id FROM employee", "SELECT title FROM employee",function(err, result) {
+    connection.query("SELECT * FROM employee",function(err, result) {
         if (err) throw err;
+        connection.query("SELECT * FROM role", function(err, roleResult){
+
+       
        
 
-    inquirer.prompt ([
-        {
-            message:"Which employee would you like to update?",
-            type:"list",
-            name:"selectedEmployee",
-            choices:function() {
-                var employeeList = [];
-                for (let i=0; i< result.length; i++) {
-                    employeeList.push(result[i].first_name + " " + result[i].last_name);
+            inquirer.prompt ([
+                {
+                    message:"Which employee would you like to update?",
+                    type:"list",
+                    name:"selectedEmployee",
+                    choices:function() {
+                        var employeeList = [];
+                        for (let i=0; i< result.length; i++) {
+                            employeeList.push(result[i].first_name + " " + result[i].last_name);
+                        }
+                        return employeeList;
+                    }
+                },
+                {
+                    message:"What is their new role?",
+                    type:"list",
+                    name: "updatedRole",
+                    choices: function() {
+                        var roleList = [];
+                        for (let i=0; i< roleResult.length; i++) {
+                            roleList.push(roleResult[i].title)
+                        }
+                        return roleList;
+                    }
                 }
-                return employeeList;
-            }
-        },
-        {
-            message:"What is their new role?",
-            type:"input",
-            name: "updatedRole",
-        }
-        // ,
-        // {
-        //     message:"What department is this position in?",
-        //     type:"list",
-        //     name:"updatedDepartment"
-        //     //choices: //Want to create a getDepartment function
-        // }
-    ]).then(function (updateAnswer) {
-        console.log("Here are our answersssssss", updateAnswer);
-        connection.query(`UPDATE employee SET ?? WHERE ??`, 
-        [
-            {
-                first_name: updateAnswer.first_name
-            },
-            {
-                last_name: updateAnswer.last_name
-            }
-        ],
-        function(err){
-            if (err) throw err;
-            console.log(updateAnswer)
-        }
-        );
-    })
+                // ,
+                // {
+                //     message:"What department is this position in?",
+                //     type:"list",
+                //     name:"updatedDepartment"
+                //     //choices: //Want to create a getDepartment function
+                // }
+            ]).then(function (updateAnswer) {
+                console.log("Here are our answersssssss", updateAnswer);
 
-})
+                var roleId;
+                for (let i=0; i<roleResult.length; i++){
+                    if (updateAnswer.updatedRole === roleResult[i].title) {
+                        console.log('we found amatch!! for role!!', roleResult[i])
+                        roleId = roleResult[i].id
+                    }
+                }
+
+                var employeeId; 
+                for (let i=0; i<result.length; i++) {
+                    if (updateAnswer.selectedEmployee.split(' ')[0] === result[i].first_name){
+                        console.log("Match for EMployee ID!!!1", result[i].id)
+                        employeeId = result[i].id;
+                    }
+                }
+
+
+                connection.query(`UPDATE employee SET role_id = ? WHERE id = ?`, 
+                [roleId, employeeId],
+                function(err){
+                    if (err) throw err;
+                    //console.log('errr!!!!!', err)
+                    //console.log(updateAnswer)
+                }
+                );
+            })
+
+        })
+    })
 }
 
 mainQs();
