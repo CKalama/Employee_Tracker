@@ -3,6 +3,7 @@
 This is a Functional Employee Tracker CLI Interface Application. 
 
 ***PLEASE READ BELOW: YOU MAY WANT TO FORK THIS REPO FOR A TRUE USER CLI EXPERIENCE***
+
 Deployed GitHub Link: https://ckalama.github.io/Employee_Tracker/
 
 Programming Tools: This Application strictly functions in the CLI/Terminal Interface and strictly through the Back-End using Node.js, npm packages: Inquirer, and Javascript. It also requires the installation and usage of the MySQL database. This will be required to connect to your local machine.
