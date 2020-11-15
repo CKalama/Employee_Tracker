@@ -85,20 +85,7 @@ function viewAll(placeHolder) {
             console.log("Job Title and Salary:", result);
         })
     }
-    inquirer.prompt ([
-        {
-            message: "Need Something Else?",
-            type: "list",
-            name: "reRunCommand",
-            choices: ["Yes", "No"]
-        }
-    ]).then(function (result) {
-        if(result.reRunCommand === "Yes") {
-            mainQs();
-        } else {
-            console.log("Please Enter 'control C' to leave the Interface");
-        }
-    })
+    reRun();
 };
 
 
@@ -125,19 +112,20 @@ function addDepartment() {
         })
 
     })
+    reRun();
 };
 
-function findRoles() {
-    return connection.query(`SELECT title FROM role`, function(err, result) {
-        if (err) throw err
-        return result.map(record => {
-            return record.title;
-        });
-    })
-}
+// function findRoles() {
+//     return connection.query(`SELECT title FROM role`, function(err, result) {
+//         if (err) throw err
+//         return result.map(record => {
+//             return record.title;
+//         });
+//     })
+// }
 
 function addEmployee() {
-    var findRoles = findRoles();
+    //var findRoles = findRoles();
     inquirer.prompt ([
         {
             message:"What is the First Name of Your New Employee?",
@@ -163,6 +151,7 @@ function addEmployee() {
         })
 
     })
+    reRun();
 };
 
 
@@ -193,6 +182,7 @@ function addRole() {
         })
 
     })
+    reRun();
 };
 
 
@@ -208,6 +198,8 @@ function getEmployeeList() {
         var roleArray = result.map(record => record.title)
         return roleArray;
     })
+
+    reRun();
 }
 
 //O 
@@ -288,9 +280,28 @@ function updateEmployee(employeeList) {
                     //console.log(updateAnswer)
                 }
                 );
+                reRun();
             })
 
         })
+    })
+    
+}
+
+function reRun() {
+    inquirer.prompt ([
+        {
+            message: "Need Something Else?",
+            type: "list",
+            name: "reRunCommand",
+            choices: ["Yes", "No"]
+        }
+    ]).then(function (result) {
+        if(result.reRunCommand === "Yes") {
+            mainQs();
+        } else {
+            console.log("Please Enter 'control C' to leave the Interface");
+        }
     })
 }
 
