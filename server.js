@@ -110,9 +110,9 @@ function addDepartment() {
             if (err) throw err;
             console.log(result);
         })
-
+        reRun();
     })
-    reRun();
+    
 };
 
 // function findRoles() {
@@ -149,9 +149,9 @@ function addEmployee() {
             if (err) throw err;
             console.log(result);
         })
-
+        reRun();
     })
-    reRun();
+    
 };
 
 
@@ -180,9 +180,9 @@ function addRole() {
             if (err) throw err;
             console.log(result);
         })
-
+        reRun();
     })
-    reRun();
+    
 };
 
 
