@@ -85,6 +85,20 @@ function viewAll(placeHolder) {
             console.log("Job Title and Salary:", result);
         })
     }
+    inquirer.prompt ([
+        {
+            message: "Need Something Else?",
+            type: "list",
+            name: "reRunCommand",
+            choices: ["Yes", "No"]
+        }
+    ]).then(function (result) {
+        if(result.reRunCommand === "Yes") {
+            mainQs();
+        } else {
+            console.log("Please Enter 'control C' to leave the Interface");
+        }
+    })
 };
 
 
@@ -112,6 +126,15 @@ function addDepartment() {
 
     })
 };
+
+function findRoles() {
+    return connection.query(`SELECT title FROM role`, function(err, result) {
+        if (err) throw err
+        return result.map(record => {
+            return record.title;
+        });
+    })
+}
 
 function addEmployee() {
     var findRoles = findRoles();
@@ -142,6 +165,8 @@ function addEmployee() {
     })
 };
 
+
+
 function addRole() {
     inquirer.prompt ([
         {
@@ -170,28 +195,20 @@ function addRole() {
     })
 };
 
-// function findRoles() {
-//     return connection.query(`SELECT title FROM role`, function(err, result) {
-//         if (err) throw err
-//         return result.map(record => {
-//             return record.title;
-//         });
-//     })
-// }
 
-// function getEmployeeList() {
-//    connection.query(`SELECT first_name, last_name, role_id FROM employee`, function(err, result) {
-//         if (err) throw err;
-//         //console.log("Here Are Your Employees: ", result);
-//         // const employeeList =  result.map(record => {
-//         //     return `${record.first_name} ${record.last_name}`
-//         // });
-//         // console.log(employeeList);
-//         // return employeeList;
-//         var roleArray = result.map(record => record.title)
-//         return roleArray;
-//     })
-// }
+function getEmployeeList() {
+   connection.query(`SELECT first_name, last_name, role_id FROM employee`, function(err, result) {
+        if (err) throw err;
+        //console.log("Here Are Your Employees: ", result);
+        // const employeeList =  result.map(record => {
+        //     return `${record.first_name} ${record.last_name}`
+        // });
+        // console.log(employeeList);
+        // return employeeList;
+        var roleArray = result.map(record => record.title)
+        return roleArray;
+    })
+}
 
 //O 
 
